@@ -1,0 +1,87 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var $block \Magento\Catalog\Block\Product\View */
+?>
+<?php $_product = $block->getProduct(); ?>
+<?php $buttonTitle = __('Add to Cart'); ?>
+
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$stockRegistry = $objectManager->get('\Magento\CatalogInventory\Api\StockRegistryInterface');
+
+$stockItem = $stockRegistry->getStockItem($_product->getId());
+
+if ($stockItem->getIsInStock()) {
+    $qty = (int)$stockItem->getQty();
+}
+?>
+
+<?php if ($_product->isSaleable()) :?>
+    <div class="box-tocart" >
+        <div class="fieldset">
+            <?php if ($block->shouldRenderQuantity()) :?>
+                <div class="field qty">
+                    <div id="custom-qty" class="control" data-bind="scope: 'qty-counter'">
+                        <!-- ko template: getTemplate() --><!-- /ko -->
+                        <?php
+                        /**
+                        JavaScript initialization script to set up a quantity counter component for a specific element.
+
+                        @var int $productDefaultQty The default quantity for the product.
+                        @var array $quantityValidators Array of validators for the quantity input.
+                        */
+                        ?>
+                        <script type="text/x-magento-init">
+                            {
+                                "#custom-qty": {
+                                    "Magento_Ui/js/core/app": {
+                                        "components": {
+                                            "qty-counter": {
+                                                "component": "qty-counter",
+                                                "config": {
+                                                    "qty": <?php echo $block->getProductDefaultQty() * 1 ?>,
+                                            "dataValidate": <?php echo json_encode($block->getQuantityValidators()) ?>
+                            }
+                        }
+                     }
+                }
+            }
+        }
+                        </script>
+                    </div>
+                <div class="availability-block">
+                    <div class="svg-img">
+                        <img src="<?php echo $block->getViewFileUrl('Magento_Catalog::images/checkmark.svg');?>" alt="checkmark">
+                    </div>
+                    <span class="instock">In stock</span>
+                    <div class="items-available">
+                        <span class="availabile-qty" ><?=$block->escapeHtml($qty)?> <span class="available-text">items available</span></span>
+                    </div>
+                </div>
+                </div>
+            <?php endif; ?>
+            <div class="actions">
+                <button type="submit"
+                        title="<?= $block->escapeHtmlAttr($buttonTitle) ?>"
+                        class="action primary tocart"
+                        id="product-addtocart-button" disabled>
+                    <span><?= $block->escapeHtml($buttonTitle) ?></span>
+                </button>
+                <?= $block->getChildHtml('', true) ?>
+            </div>
+        </div>
+    </div>
+<?php else: ?>
+    <div>out of stock</div>
+<?php endif;?>
+<script type="text/x-magento-init">
+    {
+        "#product_addtocart_form": {
+            "Magento_Catalog/js/validate-product": {}
+        }
+    }
+</script>

@@ -1,0 +1,80 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+
+/**
+ * Product additional attributes template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Attributes
+ */
+?>
+<?php
+$_helper = $this->helper(Magento\Catalog\Helper\Output::class);
+$_product = $block->getProduct();
+$description = $_product->getData('description');
+$_additional = $block->getAdditionalData();
+
+/**
+ * @var array $outputAttributes An array containing the filtered output attributes.
+ * @var array $unused An array containing the unused attributes.
+ * @var array $_additional An array containing the additional attributes.
+ */
+
+$outputAttributes = [];
+$unused = ['color','material','dimensions'];
+
+/**Inserts main attributes in list*/
+foreach ($_additional as $attribute => $value) {
+    if($attribute == 'color' || $attribute == 'dimensions' || $attribute == 'material') {
+        if ($value != '' || $value != null) {
+            $outputAttributes[$attribute] = $value;
+            unset($unused[array_search($attribute, $unused)]);
+        }
+    }
+    $unused[$attribute] = $value;
+}
+
+$outputAttributes  = array_reverse($outputAttributes );
+
+/**Checks if all primary attributes are in list, if not, adds additional attributes*/
+
+if(!empty($unused)){
+
+    while(count($outputAttributes) != 3){
+        if(count($_additional) == 0){
+            break;
+        }
+
+        foreach ($_additional as $attribute => $value){
+            if(!in_array($attribute, $outputAttributes)){
+                $outputAttributes[$attribute] = $value;
+                break;
+            }
+        }
+    }
+}
+
+?>
+<?php if ($_additional):?>
+    <div class="additional-attributes-wrapper table-wrapper" >
+        <table class="data table additional-attributes" id="product-attribute-specs-table">
+            <caption class="table-caption"><?= $block->escapeHtml(__('More Information')) ?></caption>
+            <tbody>
+            <?php foreach ($outputAttributes as $_data) :?>
+                <ul>
+                    <li><span class="attribute-key"><?= $block->escapeHtml($_data['label']) ?>:</span>
+                    <span class="attribute-value"><?= /* @noEscape */ $_helper->productAttribute($_product, $_data['value'], $_data['code']) ?></span>
+                    </li>
+                </ul>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <div>
+            <?php echo $_helper->productAttribute($_product, $_product->getDescription(), 'description') ?>
+        </div>
+    </div>
+<?php endif;?>
