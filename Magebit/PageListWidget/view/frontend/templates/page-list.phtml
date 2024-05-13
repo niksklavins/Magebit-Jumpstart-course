@@ -1,0 +1,28 @@
+<?php
+use Magento\Framework\View\Element\Template;
+use Magebit\PageListWidget\Block\Widget\PageList;
+/** @var \Magento\Framework\Escaper $escaper */
+/**@var Template $block*/
+
+/**
+ * @var string $data The data containing selected pages.
+ * @var array $data_list An array containing selected pages.
+ * @var array $links An array containing links.
+ */
+
+$data = $block->getData("selected_pages");
+$data_list = explode(",", $data);
+$links = $block->getLinks($data_list);
+?>
+<h3>
+    <?php echo $block->getData("title")?>
+</h3>
+<div>
+    <ul>
+        <?php foreach ($links as $key=>$value): ?>
+        <li><a href="<?php echo $value ?>"><?php echo $key ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+
+

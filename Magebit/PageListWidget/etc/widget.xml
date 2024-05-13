@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget id="cms_page_list" class="Magebit\PageListWidget\Block\Widget\PageList" is_email_compatible="true"
+            placeholder_image="Magento_Cms::images/widget_page_link.png">
+        <label translate="true">CMS Page List</label>
+        <description translate="true">CMS Page List</description>
+        <parameters>
+
+            <parameter name="title" xsi:type="text" visible="true" required="false" sort_order="1">
+                <label translate="true">Title</label>
+            </parameter>
+
+            <parameter name="display_mode" xsi:type="select" visible="true" required="true" sort_order="2">
+                <label translate="true">Display mode</label>
+                <options>
+
+                    <option name="all_pages" value="all_pages">
+                        <label>All pages</label>
+                    </option>
+
+                    <option name="specific_pages" value="specific_pages">
+                        <label>Specific pages</label>
+                    </option>
+
+                </options>
+
+            </parameter>
+
+            <parameter name="selected_pages" xsi:type="multiselect" visible="true" required="true" sort_order="3">
+                <label>Selected pages</label>
+                <depends>
+                    <parameter name="display_mode" value="specific_pages"/>
+                </depends>
+                <options>
+
+                    <option name="404_not_found" value="404_not_found">
+                        <label>404 Not Found</label>
+                    </option>
+
+                    <option name="home_page" value="home_page">
+                        <label>Home Page</label>
+                    </option>
+
+                    <option name="enable_cookies" value="enable_cookies">
+                        <label>Enable Cookies</label>
+                    </option>
+
+                    <option name="privacy_and_cookie_policy" value="privacy_and_cookie_policy">
+                        <label>Privacy and Cookie Policy</label>
+                    </option>
+
+                </options>
+            </parameter>
+
+        </parameters>
+    </widget>
+</widgets>
