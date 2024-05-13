@@ -1,0 +1,21 @@
+<?php
+use Magento\Framework\View\Element\Template;
+use MageMastery\FirstLayout\ViewModel\ExampleModel;
+/**@var Template $block*/
+
+$data = $block->getData('view_model');
+
+$ar = $data->getExampleData();
+
+
+?>
+<h1>hiiiiiiiiiiiiiiii</h1>
+<p>hello</p>
+<div>hello</div>
+<p><strong><?= $escaper->escapeHtml($block->getData('first_message')); ?></strong></p>
+<ul>
+    <?php
+    foreach($ar as $i): ?>
+        <li> <?= $escaper->escapeHtml($i);?></li>
+    <?php endforeach;?>
+</ul>
